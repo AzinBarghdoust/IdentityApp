@@ -1,7 +1,13 @@
+using System.Reflection;
 using System.Text;
-using IdentityApp.Models;
-using IdentityApp.Persistence.SqlServerContext;
+using FluentValidation;
+using IdentityApp.Application.Tasks.Validators;
+using IdentityApp.Domain.Entities;
+using IdentityApp.Domain.Repositories;
+using IdentityApp.Persistence.Contexts;
+using IdentityApp.Persistence.Repositories;
 using IdentityApp.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -24,9 +30,16 @@ builder.Services.AddDbContext<SqlServerContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"));
 });
+//fluentvalidation
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateTaskCommandValidator>();
 
 //jwt settings
 builder.Services.AddScoped<JWTService>();
+//Register mediator
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
 //add IdentityService
 builder.Services.AddIdentityCore<User>(options =>
