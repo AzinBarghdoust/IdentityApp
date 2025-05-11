@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityApp.Persistence.Contexts.Migratios
 {
     [DbContext(typeof(SqlServerContext))]
-    [Migration("20250505121141_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250510143856_InitialCreateTaskss")]
+    partial class InitialCreateTaskss
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

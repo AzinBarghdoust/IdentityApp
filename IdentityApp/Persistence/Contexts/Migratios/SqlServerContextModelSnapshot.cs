@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityApp.Persistence.Contexts.Migratios
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(SqlServerContext))]
     partial class SqlServerContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityApp.Persistence.Contexts.Migratios
 {
-    [DbContext(typeof(Context))]
+   // [DbContext(typeof(Context))]
     [Migration("20250505132355_InitialCreateTasks")]
     partial class InitialCreateTasks
     {

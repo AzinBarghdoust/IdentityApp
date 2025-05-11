@@ -16,6 +16,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using TaskManagement.Domain.Repositories;
+using TaskManagement.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+
+
 
 //DB Registration
 builder.Services.AddDbContext<SqlServerContext>(options =>
@@ -40,6 +45,8 @@ builder.Services.AddScoped<JWTService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 //add IdentityService
 builder.Services.AddIdentityCore<User>(options =>

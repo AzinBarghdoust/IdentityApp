@@ -9,16 +9,20 @@ using IdentityApp.Application.Common.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using IdentityApp.Domain.Repositories;
 
 namespace IdentityApp.Application.Tasks.Handlers
 {
     public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Response<Guid>>
     {
+        //private readonly ITaskRepository _taskRepository;
         private readonly SqlServerContext _context;
+
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public CreateTaskCommandHandler(SqlServerContext context, IHttpContextAccessor httpContextAccessor)
+        public CreateTaskCommandHandler( SqlServerContext context,IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+           // _taskRepository = taskRepository;
             _httpContextAccessor = httpContextAccessor;
         }
         public async Task<Response<Guid>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)

@@ -12,5 +12,6 @@ namespace IdentityApp.Domain.Repositories
         Task AddAsync(TaskItem task);
         Task UpdateAsync(TaskItem task);
         Task DeleteAsync(TaskItem task);
+
     }
 }

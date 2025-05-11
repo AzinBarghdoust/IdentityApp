@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityApp.Persistence.Contexts.Migratios
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(SqlServerContext))]
     [Migration("20250406122253_AddingUser")]
     partial class AddingUser
     {
