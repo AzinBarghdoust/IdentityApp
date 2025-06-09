@@ -5,27 +5,28 @@ using IdentityApp.Application.Common.Responses;
 using IdentityApp.Application.Tasks.Commands;
 using IdentityApp.Persistence.Contexts;
 using MediatR;
+using TaskManagement.Domain.Repositories;
 
 namespace IdentityApp.Application.Tasks.Handlers
 {
     public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, Response<Guid>>
     {
-        private readonly SqlServerContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteTaskCommandHandler(    SqlServerContext context)
+        public DeleteTaskCommandHandler(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Response<Guid>> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
         {
-            var task = await _context.Tasks.FindAsync(request.Id);
+            var task = await _unitOfWork.Tasks.GetByIdAsync(request.Id);
 
             if (task == null)
                 return new Response<Guid>("Task not found", false);
 
-            _context.Tasks.Remove(task);
-            await _context.SaveChangesAsync(cancellationToken);
+            _unitOfWork.Tasks.DeleteAsync(task);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new Response<Guid>(request.Id, "Task deleted successfully");
         }

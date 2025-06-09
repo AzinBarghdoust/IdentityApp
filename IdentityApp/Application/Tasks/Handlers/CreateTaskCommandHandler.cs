@@ -10,24 +10,23 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using IdentityApp.Domain.Repositories;
+using TaskManagement.Domain.Repositories;
 
 namespace IdentityApp.Application.Tasks.Handlers
 {
     public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Response<Guid>>
     {
-        //private readonly ITaskRepository _taskRepository;
-        private readonly SqlServerContext _context;
-
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public CreateTaskCommandHandler( SqlServerContext context,IHttpContextAccessor httpContextAccessor)
+
+        public CreateTaskCommandHandler(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
-            _context = context;
-           // _taskRepository = taskRepository;
+            _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
         }
         public async Task<Response<Guid>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
-            var userId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var task = new TaskItem
             {
@@ -36,10 +35,10 @@ namespace IdentityApp.Application.Tasks.Handlers
                 Description = request.Description,
                 Status = TasksStatus.Pending,
                 UserId = userId,
-                 
             };
-             _context.Tasks.Add(task);
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await _unitOfWork.Tasks.AddAsync(task);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new Response<Guid>(task.Id, "Task created successfully");
         }

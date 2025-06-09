@@ -5,26 +5,29 @@ using IdentityApp.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TaskManagement.Domain.Repositories;
 
 namespace IdentityApp.Application.Tasks.Handlers
 {
     public class GetAllTasksQueryHandler : IRequestHandler<GetAllTasksQuery, Response<List<TaskItem>>>
     {
-        private readonly SqlServerContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        //private readonly SqlServerContext _context;
 
-        public GetAllTasksQueryHandler( SqlServerContext context)
+        public GetAllTasksQueryHandler( IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
             
         }
         public async Task<Response<List<TaskItem>>> Handle(GetAllTasksQuery request, CancellationToken cancellationToken)
         {
-            var task = await _context.Tasks.ToListAsync(cancellationToken);
+            var task = await _unitOfWork.Tasks.GetAllAsync();
             var response = new Response<List<TaskItem>>
             {
-                Data = task,
+                Data = task.ToList(),
                 Message = "Tasks fetched successfully",
                 Success = true
             };
